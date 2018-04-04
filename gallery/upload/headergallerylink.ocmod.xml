@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+	<code>addgallerylink</code>
+	<name>Header Gallery Link</name>
+	<version>1.0</version>
+	<author>WebDesign Master</author>
+	<link>http://webdesign-master.ru</link>
+	<file path="catalog/controller/common/header.php">
+		<operation>
+			<search><![CDATA[
+				$data['cart'] = $this->load->controller('common/cart');
+			]]></search>
+			<add position="after"><![CDATA[
+				$data['all_work'] = $this->url->link('information/allWork', '', 'SSL');
+			]]></add>
+		</operation>
+	</file>
+</modification>
