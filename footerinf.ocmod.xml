@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+	<code>footerinf</code>
+	<name>Footer Information</name>
+	<version>1.0</version>
+	<author>TarasoffWeb</author>
+	<link>http://tarasoff.sumy.ua/</link>
+	<file path="catalog/controller/common/footer.php">
+		<operation>
+			<search><![CDATA[
+				$this->load->language('common/footer');
+			]]></search>
+			<add position="before"><![CDATA[
+				$data['home'] = $this->url->link('common/home');
+
+				$data['name'] = $this->config->get('config_name');
+
+				if ($this->request->server['HTTPS']) {
+					$server = $this->config->get('config_ssl');
+				} else {
+					$server = $this->config->get('config_url');
+				}
+
+				if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+					$data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+				} else {
+					$data['logo'] = '';
+				}
+
+				$data['telephone'] = $this->config->get('config_telephone');
+
+				$data['address'] = $this->config->get('config_address');
+
+				$data['email'] = $this->config->get('config_email');
+
+			        $this->load->language('module/maincategory'); //подключаем любой языковой файл
+			        $data['heading_title'] = $this->language->get('heading_title'); //объявляем переменную heading_title с данными из языкового файла
+			        $this->load->model('catalog/category'); //подключаем модель категорий.
+			        $mainCats = $this->model_catalog_category->getCategories();
+			        $out = array();
+
+			        foreach ($mainCats as $mainCatsItem) {
+
+			            $subCats = $this->model_catalog_category->getCategories($mainCatsItem['category_id']);
+			            $mainCatsItem = $mainCatsItem + ['href' => $this->url->link('product/category', 'path=' . $mainCatsItem['category_id'])];
+			            foreach ($subCats as $subCatsItem) {
+			                $subCatsItem = $subCatsItem + ['href' => $this->url->link('product/category', 'path=' . $subCatsItem['category_id'])];
+			                $mainCatsItem['subcat'][] = $subCatsItem;
+			            }
+			            array_push($out, $mainCatsItem);
+			        }
+			        $data['category_info'] = $out;
+			]]></add>
+		</operation>
+	</file>  
+</modification>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+	<code>manufacturer</code>
+	<name>Manufacturer Home</name>
+	<version>1.0</version>
+	<author>TarasoffWeb</author>
+	<link>http://tarasoff.sumy.ua/</link>
+	<file path="catalog/controller/common/home.php">
+		<operation>
+			<search><![CDATA[
+				$data['header'] = $this->load->controller('common/header');
+			]]></search>
+			<add position="after"><![CDATA[
+		         $this->load->model('catalog/manufacturer');       
+		       
+		        $data['manuf'] = array();
+
+		        $results = $this->model_catalog_manufacturer->getManufacturers();
+		       
+		        foreach ($results as $result) {
+			        if ($result['image']) {
+						$image = $this->model_tool_image->resize($result['image'], 200, 100);
+					} 
+					else {
+						$image = false;
+					}
+		            $data['manuf'][] = array(
+		                'name' => $result['name'],
+		                'href' => $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $result['manufacturer_id']),
+		                'thumb' => $image
+		            );
+		        }
+		       
+		       
+		        $data['categories'][] = array(
+		            'name'     => 'Производители',
+		            'children' => $data['manuf'],
+		            'column'   => 1,
+		            'href'     => $this->url->link('product/manufacturer')
+		        ); 
+			]]></add>
+		</operation>
+	</file>  
+</modification>
