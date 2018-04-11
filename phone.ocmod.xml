@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+	<name>New Phone</name>
+	<code>newphone</code>
+	<version>1.0</version>
+	<author>TarasoffWeb</author>
+	<link>http://tarasoff.sumy.ua/</link>
+	
+	<file path="catalog/view/theme/*/template/common/footer.tpl">
+		<operation>
+			<search><![CDATA[
+				<a href="tel:<?php echo $telephone; ?>">+<?php echo $telephone; ?></a>
+			]]></search>
+			<add position="after"><![CDATA[
+				<br><a href="tel:<?php echo $config_telephone2; ?>">+<?php echo $config_telephone2; ?></a>
+			]]></add>
+		</operation>
+	</file>
+	
+	<file path="catalog/controller/common/footer.php">
+		<operation error="skip">
+			<search><![CDATA[
+				$data['newsletter'] = $this->url->link('account/newsletter', '', true);
+			]]></search>
+			<add position="after"><![CDATA[
+				$data['config_telephone2'] = $this->config->get('config_telephone2');
+			]]></add>
+		</operation>
+	</file>
+	
+	<file path="admin/controller/setting/setting.php">
+		<operation error="skip">
+			<search><![CDATA[
+				if (isset($this->request->post['config_telephone'])) {
+					$data['config_telephone'] = $this->request->post['config_telephone'];
+				} else {
+					$data['config_telephone'] = $this->config->get('config_telephone');
+				}
+			]]></search>
+			<add position="after"><![CDATA[
+				if (isset($this->request->post['config_telephone2'])) {
+					$data['config_telephone2'] = $this->request->post['config_telephone2'];
+				} else {
+					$data['config_telephone2'] = $this->config->get('config_telephone2');
+				}
+			]]></add>
+		</operation>
+		
+		<operation error="skip">
+			<search><![CDATA[
+				$data['entry_status'] = $this->language->get('entry_status');
+			]]></search>
+			<add position="after"><![CDATA[
+				$data['entry_telephone2'] = $this->language->get('entry_telephone2');
+			]]></add>
+		</operation>
+	</file>
+	
+	<file path="admin/language/en{*}/setting/setting.php">
+		<operation error="skip">
+			<search><![CDATA[
+				$_['entry_name']
+			]]></search>
+			<add position="after"><![CDATA[
+				$_['entry_telephone2']                     	= 'Phone2';
+			]]></add>
+		</operation>
+	</file>
+	
+	<file path="admin/language/ru{*}/setting/setting.php">
+		<operation error="skip">
+			<search><![CDATA[
+				$_['entry_name']
+			]]></search>
+			<add position="after"><![CDATA[
+				$_['entry_telephone2']                     	= 'Телефон2';
+			]]></add>
+		</operation>
+	</file>
+	
+	<file path="admin/view/template/setting/setting.tpl">
+		<operation error="skip">
+			<search><![CDATA[
+				<input type="text" name="config_telephone" value="<?php echo $config_telephone; ?>" placeholder="<?php echo $entry_telephone; ?>" id="input-telephone" class="form-control" />
+			]]></search>
+			<add position="after"><![CDATA[
+	            <input type="text" name="config_telephone2" placeholder="<?php echo $entry_telephone2; ?>" id="input-telephone2" class="form-control" />
+			]]></add>
+		</operation>
+	</file>
+	
+</modification>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+	<name>Social</name>
+	<code>social</code>
+	<version>1.0</version>
+	<author>TarasoffWeb</author>
+	<link>http://tarasoff.sumy.ua/</link>
+	
+	<file path="catalog/view/theme/*/template/common/footer.tpl">
+		<operation>
+			<search><![CDATA[
+				<footer>
+			]]></search>
+			<add position="before"><![CDATA[
+				<!-- Floating Action Button like Google Material -->
+					<div class="menu pmd-floating-action"  role="navigation">
+						<?php if ($config_telegram_link) { ?>  
+						  <a href="tg://<?php echo $config_telegram_link; ?>" class="pmd-floating-action-btn btn btn-sm pmd-btn-fab pmd-btn-raised pmd-ripple-effect btn-default" title="Telegram"> 
+						    <i class="fa fa-telegram" aria-hidden="true"></i>
+						  </a>
+					  	<?php } ?> 
+						<?php if ($config_facebook_link) { ?> 
+						  <a href="<?php echo $config_facebook_link; ?>" class="pmd-floating-action-btn btn btn-sm pmd-btn-fab pmd-btn-raised pmd-ripple-effect btn-default" title="Facebook" target="_blank"> 
+						    <i class="fa fa-facebook-square" aria-hidden="true"></i>
+						  </a>
+						<?php } ?>
+					  <a class="pmd-floating-action-btn btn pmd-btn-fab pmd-btn-raised pmd-ripple-effect btn-primary" title="Читайте нас в сетях" href="javascript:void(0);">
+					    <i class="fa fa-comments-o" aria-hidden="true"></i>
+					  </a> 
+					</div>
+			]]></add>
+		</operation>
+	</file>
+	
+	<file path="catalog/controller/common/footer.php">
+		<operation error="skip">
+			<search><![CDATA[
+				$data['newsletter'] = $this->url->link('account/newsletter', '', true);
+			]]></search>
+			<add position="after"><![CDATA[
+				$data['config_facebook_link'] = $this->config->get('config_facebook_link');
+				$data['config_telegram_link'] = $this->config->get('config_telegram_link');
+			]]></add>
+		</operation>
+	</file>
+	
+	<file path="admin/controller/setting/setting.php">
+		<operation error="skip">
+			<search><![CDATA[
+				$this->load->model('tool/image');
+			]]></search>
+			<add position="before"><![CDATA[
+				if (isset($this->request->post['config_facebook_link'])) {
+					$data['config_facebook_link'] = $this->request->post['config_facebook_link'];
+				} else {
+					$data['config_facebook_link'] = $this->config->get('config_facebook_link');
+				}
+				if (isset($this->request->post['config_telegram_link'])) {
+					$data['config_telegram_link'] = $this->request->post['config_telegram_link'];
+				} else {
+					$data['config_telegram_link'] = $this->config->get('config_telegram_link');
+				}
+			]]></add>
+		</operation>
+		
+		<operation error="skip">
+			<search><![CDATA[
+				$data['entry_status'] = $this->language->get('entry_status');
+			]]></search>
+			<add position="before"><![CDATA[
+				$data['entry_telegram'] = $this->language->get('entry_telegram');
+				$data['entry_facebook'] = $this->language->get('entry_facebook');
+				$data['help_telegram'] = $this->language->get('help_telegram');
+				$data['tab_social'] = $this->language->get('tab_social');
+			]]></add>
+		</operation>
+	</file>
+	
+	<file path="admin/language/en{*}/setting/setting.php">
+		<operation error="skip">
+			<search><![CDATA[
+				$_['entry_name']
+			]]></search>
+			<add position="before"><![CDATA[
+				$_['entry_telegram']                     	= 'Telegram number';
+				$_['entry_facebook']                	    = 'Facebook link';
+				$_['help_telegram']  = 'Input nicname in telegrame';
+				$_['tab_social']                   		= 'Social';
+			]]></add>
+		</operation>
+	</file>
+	
+	<file path="admin/language/ru{*}/setting/setting.php">
+		<operation error="skip">
+			<search><![CDATA[
+				$_['entry_name']
+			]]></search>
+			<add position="before"><![CDATA[
+				$_['entry_telegram']                     	= 'Telegram';
+				$_['entry_facebook']                	    = 'Facebook';
+				$_['help_telegram']            		        = 'Введите никнейм в телеграме';
+				$_['tab_social']                   		    = 'Социальные сети';
+			]]></add>
+		</operation>
+	</file>
+	
+	<file path="admin/view/template/setting/setting.tpl">
+		<operation error="skip">
+			<search><![CDATA[
+				<li><a href="#tab-server" data-toggle="tab"><?php echo $tab_server; ?></a></li>
+			]]></search>
+			<add position="before"><![CDATA[
+				<li><a href="#tabSocial" data-toggle="tab"><?php echo $tab_social; ?></a></li>
+			]]></add>
+		</operation>
+		
+		<operation error="skip">
+			<search><![CDATA[
+				<div class="tab-pane" id="tab-server">
+			]]></search>
+			<add position="before"><![CDATA[
+				<div class="tab-pane" id="tabSocial">
+					<div class="form-group">
+						<label class="col-sm-2 control-label"><span data-toggle="tooltip" title="<?php echo $help_telegram; ?>"><?php echo $entry_telegram; ?></span></label>
+						<div class="col-sm-4">
+						  <input type="text" name="config_telegram_link" value="<?php echo $config_telegram_link; ?>" placeholder="<?php echo $entry_telegram; ?>" id="in-telegram-id" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label"><?php echo $entry_facebook; ?></label>
+						<div class="col-sm-4">
+						  <input type="text" name="config_facebook_link" value="<?php echo $config_facebook_link; ?>" placeholder="<?php echo $entry_facebook; ?>" id="in-facebook-id" class="form-control" />
+						</div>
+					</div>
+				</div>
+			]]></add>
+		</operation>
+	</file>
+	
+</modification>
